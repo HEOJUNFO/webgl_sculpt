@@ -492,7 +492,7 @@ class SculptGL extends Scene{
     } else {
 
       Multimesh.RENDER_HINT = Multimesh.PICKING;
-      this._sculptManager.preUpdate();
+      //this._sculptManager.preUpdate();
 
       if (action === Enums.Action.SCULPT_EDIT) {
         Multimesh.RENDER_HINT = Multimesh.SCULPT;

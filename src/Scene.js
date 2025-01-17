@@ -11,7 +11,7 @@ import Gui from './gui/Gui';
 // import Background from 'drawables/Background';
 import Mesh from './mesh/Mesh';
 import Multimesh from './mesh/multiresolution/Multimesh';
-// import Primitives from 'drawables/Primitives';
+import Primitives from './drawables/Primitives';
 // import StateManager from 'states/StateManager';
 import RenderData from './mesh/RenderData';
 // import Rtt from 'drawables/Rtt';
@@ -87,8 +87,8 @@ class Scene {
     // this._rttOpaque = new Rtt(this._gl, Enums.Shader.FXAA);
     // this._rttTransparent = new Rtt(this._gl, null, this._rttOpaque.getDepth(), true);
 
-    // this._grid = Primitives.createGrid(this._gl);
-    // this.initGrid();
+    this._grid = Primitives.createGrid(this._gl);
+    this.initGrid();
 
     this.loadTextures();
     this._gui.initGui();
@@ -184,16 +184,16 @@ class Scene {
     this._canvas.style.cursor = style;
   }
 
-  // initGrid() {
-  //   const grid = this._grid;
-  //   grid.normalizeSize();
-  //   const gridm = grid.getMatrix();
-  //   mat4.translate(gridm, gridm, [0.0, -0.45, 0.0]);
-  //   const scale = 2.5;
-  //   mat4.scale(gridm, gridm, [scale, scale, scale]);
-  //   this._grid.setShaderType(Enums.Shader.FLAT);
-  //   grid.setFlatColor([0.04, 0.04, 0.04]);
-  // }
+  initGrid() {
+    const grid = this._grid;
+    grid.normalizeSize();
+    const gridm = grid.getMatrix();
+    mat4.translate(gridm, gridm, [0.0, -0.45, 0.0]);
+    const scale = 2.5;
+    mat4.scale(gridm, gridm, [scale, scale, scale]);
+    this._grid.setShaderType(Enums.Shader.FLAT);
+    grid.setFlatColor([0.04, 0.04, 0.04]);
+  }
 
   setOrUnsetMesh(mesh, multiSelect) {
     if (!mesh) {
@@ -500,8 +500,7 @@ class Scene {
 
   addSphere() {
     // make a cube and subdivide it
-    // const mesh = new Multimesh(Primitives.createCube(this._gl));
-    const mesh = new Multimesh(new Mesh(this._gl)); // 임시 대체
+    const mesh = new Multimesh(Primitives.createCube(this._gl));
 
     mesh.normalizeSize();
     this.subdivideClamp(mesh);
@@ -509,8 +508,8 @@ class Scene {
   }
 
   addCube() {
-    // const mesh = new Multimesh(Primitives.createCube(this._gl));
-    const mesh = new Multimesh(new Mesh(this._gl)); // 임시 대체
+    const mesh = new Multimesh(Primitives.createCube(this._gl));
+
     mesh.normalizeSize();
     mat4.scale(mesh.getMatrix(), mesh.getMatrix(), [0.7, 0.7, 0.7]);
     this.subdivideClamp(mesh, true);
@@ -518,8 +517,7 @@ class Scene {
   }
 
   addCylinder() {
-    // const mesh = new Multimesh(Primitives.createCylinder(this._gl));
-    const mesh = new Multimesh(new Mesh(this._gl)); // 임시 대체
+    const mesh = new Multimesh(Primitives.createCylinder(this._gl));
     mesh.normalizeSize();
     mat4.scale(mesh.getMatrix(), mesh.getMatrix(), [0.7, 0.7, 0.7]);
     this.subdivideClamp(mesh);
@@ -527,17 +525,17 @@ class Scene {
   }
 
   addTorus(preview) {
-    // const mesh = new Multimesh(
-    //   Primitives.createTorus(
-    //     this._gl,
-    //     this._torusLength,
-    //     this._torusWidth,
-    //     this._torusRadius,
-    //     this._torusRadial,
-    //     this._torusTubular
-    //   )
-    // );
-    const mesh = new Multimesh(new Mesh(this._gl)); // 임시 대체
+    const mesh = new Multimesh(
+      Primitives.createTorus(
+        this._gl,
+        this._torusLength,
+        this._torusWidth,
+        this._torusRadius,
+        this._torusRadial,
+        this._torusTubular
+      )
+    );
+
     if (preview) {
       mesh.setShowWireframe(true);
       const scale = 0.3 * Utils.SCALE;
