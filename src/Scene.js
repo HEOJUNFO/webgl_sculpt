@@ -9,13 +9,13 @@ import Subdivision from './editing/Subdivision';
 import Gui from './gui/Gui';
 import Camera from './math3d/Camera';
 import Picking from './math3d/Picking';
-// import Background from 'drawables/Background';
+import Background from './drawables/Background';
 import Mesh from './mesh/Mesh';
 import Multimesh from './mesh/multiresolution/Multimesh';
 import Primitives from './drawables/Primitives';
 import StateManager from './states/StateManager';
 import RenderData from './mesh/RenderData';
-// import Rtt from 'drawables/Rtt';
+import Rtt from './drawables/Rtt';
 import ShaderLib from './render/ShaderLib';
 import MeshStatic from './mesh/meshStatic/MeshStatic';
 import WebGLCaps from './render/WebGLCaps';
@@ -56,15 +56,15 @@ class Scene {
     this._showContour = opts.outline;
     this._showGrid = opts.grid;
     this._grid = null;
-    // this._background = null;
+    this._background = null;
     this._meshes = []; // the meshes
     this._selectMeshes = []; // multi selection
     this._mesh = null; // the selected mesh
 
-    // this._rttContour = null;     // rtt for contour
-    // this._rttMerge = null;       // rtt decode opaque + merge transparent
-    // this._rttOpaque = null;      // rtt half float
-    // this._rttTransparent = null; // rtt rgbm
+    this._rttContour = null;     // rtt for contour
+    this._rttMerge = null;       // rtt decode opaque + merge transparent
+    this._rttOpaque = null;      // rtt half float
+    this._rttTransparent = null; // rtt rgbm
 
     // ui stuffs
     this._focusGui = false; // if the gui is being focused
@@ -81,12 +81,12 @@ class Scene {
     if (!this._gl) return;
 
     this._sculptManager = new SculptManager(this);
-    // this._background = new Background(this._gl, this);
+    this._background = new Background(this._gl, this);
 
-    // this._rttContour = new Rtt(this._gl, Enums.Shader.CONTOUR, null);
-    // this._rttMerge = new Rtt(this._gl, Enums.Shader.MERGE, null);
-    // this._rttOpaque = new Rtt(this._gl, Enums.Shader.FXAA);
-    // this._rttTransparent = new Rtt(this._gl, null, this._rttOpaque.getDepth(), true);
+    this._rttContour = new Rtt(this._gl, Enums.Shader.CONTOUR, null);
+    this._rttMerge = new Rtt(this._gl, Enums.Shader.MERGE, null);
+    this._rttOpaque = new Rtt(this._gl, Enums.Shader.FXAA);
+    this._rttTransparent = new Rtt(this._gl, null, this._rttOpaque.getDepth(), true);
 
     this._grid = Primitives.createGrid(this._gl);
     this.initGrid();
@@ -117,9 +117,9 @@ class Scene {
     xhr.send(null);
   }
 
-  // getBackground() {
-  //   return this._background;
-  // }
+  getBackground() {
+    return this._background;
+  }
 
   getViewport() {
     return this._viewport;
@@ -247,17 +247,17 @@ class Scene {
 
     if (this._drawFullScene) this._drawScene();
 
-    // gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.DEPTH_TEST);
 
-    // gl.bindFramebuffer(gl.FRAMEBUFFER, this._rttMerge.getFramebuffer());
-    // this._rttMerge.render(this); // merge + decode
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this._rttMerge.getFramebuffer());
+    this._rttMerge.render(this); // merge + decode
 
     // render to screen
-    // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    // this._rttOpaque.render(this); // fxaa
+    this._rttOpaque.render(this); // fxaa
 
-    // gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.DEPTH_TEST);
 
     if (this._sculptManager) this._sculptManager.postRender(); // draw sculpting gizmo stuffs (if needed)
   }
@@ -270,24 +270,24 @@ class Scene {
     // /////////////
     // // CONTOUR 1/2
     // /////////////
-    // gl.disable(gl.DEPTH_TEST);
-    // const showContour = this._selectMeshes.length > 0 && this._showContour && ShaderLib[Enums.Shader.CONTOUR].color[3] > 0.0;
-    // if (showContour) {
-    //   gl.bindFramebuffer(gl.FRAMEBUFFER, this._rttContour.getFramebuffer());
-    //   gl.clear(gl.COLOR_BUFFER_BIT);
-    //   for (let s = 0, sel = this._selectMeshes, nbSel = sel.length; s < nbSel; ++s)
-    //     sel[s].renderFlatColor(this);
-    // }
-    // gl.enable(gl.DEPTH_TEST);
+    gl.disable(gl.DEPTH_TEST);
+    const showContour = this._selectMeshes.length > 0 && this._showContour && ShaderLib[Enums.Shader.CONTOUR].color[3] > 0.0;
+    if (showContour) {
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this._rttContour.getFramebuffer());
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      for (let s = 0, sel = this._selectMeshes, nbSel = sel.length; s < nbSel; ++s)
+        sel[s].renderFlatColor(this);
+    }
+    gl.enable(gl.DEPTH_TEST);
 
     // /////////////
     // // OPAQUE PASS
     // /////////////
-    // gl.bindFramebuffer(gl.FRAMEBUFFER, this._rttOpaque.getFramebuffer());
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this._rttOpaque.getFramebuffer());
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // // grid
-    // if (this._showGrid) this._grid.render(this);
+    if (this._showGrid) this._grid.render(this);
 
     // (post opaque pass)
     let i = 0;
@@ -298,45 +298,45 @@ class Scene {
     const startTransparent = i;
     if (this._meshPreview) this._meshPreview.render(this);
 
-    // // background
-    // if (this._background) this._background.render();
+    // background
+    if (this._background) this._background.render();
 
     // /////////////
     // // TRANSPARENT PASS
     // /////////////
-    // gl.bindFramebuffer(gl.FRAMEBUFFER, this._rttTransparent.getFramebuffer());
-    // gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this._rttTransparent.getFramebuffer());
+    gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // gl.enable(gl.BLEND);
-    // gl.depthFunc(gl.LESS);
+    gl.enable(gl.BLEND);
+    gl.depthFunc(gl.LESS);
 
     for (i = 0; i < nbMeshes; ++i) {
       if (meshes[i].getShowWireframe())
         meshes[i].renderWireframe(this);
     }
 
-    // gl.depthFunc(gl.LEQUAL);
-    // gl.depthMask(false);
-    // gl.enable(gl.CULL_FACE);
+    gl.depthFunc(gl.LEQUAL);
+    gl.depthMask(false);
+    gl.enable(gl.CULL_FACE);
 
     for (i = startTransparent; i < nbMeshes; ++i) {
-      // gl.cullFace(gl.FRONT);
+      gl.cullFace(gl.FRONT);
       meshes[i].render(this);
-      // gl.cullFace(gl.BACK);
+      gl.cullFace(gl.BACK);
       meshes[i].render(this);
     }
 
-    // gl.disable(gl.CULL_FACE);
+    gl.disable(gl.CULL_FACE);
 
     // /////////////
     // // CONTOUR 2/2
     // /////////////
-    // if (showContour) {
-    //   this._rttContour.render(this);
-    // }
+    if (showContour) {
+      this._rttContour.render(this);
+    }
 
-    // gl.depthMask(true);
-    // gl.disable(gl.BLEND);
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
   }
 
   /** Pre compute matrices and sort meshes */
@@ -441,12 +441,12 @@ class Scene {
 
     this._gl.viewport(0, 0, newWidth, newHeight);
     if (this._camera) this._camera.onResize(newWidth, newHeight);
-    // if (this._background) this._background.onResize(newWidth, newHeight);
+    if (this._background) this._background.onResize(newWidth, newHeight);
 
-    // if (this._rttContour) this._rttContour.onResize(newWidth, newHeight);
-    // if (this._rttMerge) this._rttMerge.onResize(newWidth, newHeight);
-    // if (this._rttOpaque) this._rttOpaque.onResize(newWidth, newHeight);
-    // if (this._rttTransparent) this._rttTransparent.onResize(newWidth, newHeight);
+    if (this._rttContour) this._rttContour.onResize(newWidth, newHeight);
+    if (this._rttMerge) this._rttMerge.onResize(newWidth, newHeight);
+    if (this._rttOpaque) this._rttOpaque.onResize(newWidth, newHeight);
+    if (this._rttTransparent) this._rttTransparent.onResize(newWidth, newHeight);
 
     this.render();
   }

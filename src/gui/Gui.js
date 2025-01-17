@@ -6,8 +6,8 @@ import TR from './GuiTR';
 // import GuiFiles from 'gui/GuiFiles';
 import GuiMesh from './GuiMesh';
 // import GuiTopology from 'gui/GuiTopology';
-// import GuiRendering from 'gui/GuiRendering';
-// import GuiScene from 'gui/GuiScene';
+import GuiRendering from './GuiRendering';
+import GuiScene from './GuiScene';
 // import GuiSculpting from 'gui/GuiSculpting';
 // import GuiStates from 'gui/GuiStates';
 // import GuiTablet from 'gui/GuiTablet';
@@ -57,7 +57,7 @@ class Gui {
     this._topbar = this._guiMain.addTopbar();
     // ctrls[idc++] = this._ctrlFiles = new GuiFiles(this._topbar, this);
     // // this.initPrint(this._topbar);
-    // ctrls[idc++] = this._ctrlScene = new GuiScene(this._topbar, this);
+    ctrls[idc++] = this._ctrlScene = new GuiScene(this._topbar, this);
     // ctrls[idc++] = this._ctrlStates = new GuiStates(this._topbar, this);
     // ctrls[idc++] = this._ctrlBackground = new GuiBackground(this._topbar, this);
     // ctrls[idc++] = this._ctrlCamera = new GuiCamera(this._topbar, this);
@@ -68,7 +68,7 @@ class Gui {
 
     // Initialize the sidebar
     this._sidebar = this._guiMain.addRightSidebar();
-    // ctrls[idc++] = this._ctrlRendering = new GuiRendering(this._sidebar, this);
+    ctrls[idc++] = this._ctrlRendering = new GuiRendering(this._sidebar, this);
     // ctrls[idc++] = this._ctrlTopology = new GuiTopology(this._sidebar, this);
     // ctrls[idc++] = this._ctrlSculpting = new GuiSculpting(this._sidebar, this);
 
@@ -173,10 +173,10 @@ class Gui {
   }
 
   updateMesh() {
-    // this._ctrlRendering.updateMesh();
+    this._ctrlRendering.updateMesh();
     // this._ctrlTopology.updateMesh();
     // this._ctrlSculpting.updateMesh();
-    // this._ctrlScene.updateMesh();
+    this._ctrlScene.updateMesh();
     this.updateMeshInfo();
   }
 
