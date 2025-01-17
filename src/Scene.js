@@ -5,7 +5,7 @@ import Enums from './misc/Enums';
 import Utils from './misc/Utils';
 import SculptManager from './editing/SculptManager';
 import Subdivision from './editing/Subdivision';
-// import Import from 'files/Import';
+import Import from './files/Import';
 import Gui from './gui/Gui';
 import Camera from './math3d/Camera';
 import Picking from './math3d/Picking';
@@ -97,7 +97,7 @@ class Scene {
 
     const modelURL = getOptionsURL().modelurl;
     if (modelURL) this.addModelURL(modelURL);
-    else this.addSphere();
+    // else this.addSphere();
   }
 
   addModelURL(url) {
@@ -565,7 +565,7 @@ class Scene {
     return mesh;
   }
 
-  /*
+  
   loadScene(fileData, fileType) {
     var newMeshes;
     if (fileType === 'obj') newMeshes = Import.importOBJ(fileData, this._gl);
@@ -600,7 +600,7 @@ class Scene {
     this.resetCameraMeshes(newMeshes);
     return newMeshes;
   }
-  */
+  
 
   getFileType(url) {
     const lower = url.toLowerCase();

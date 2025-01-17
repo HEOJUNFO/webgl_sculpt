@@ -3,12 +3,12 @@ import TR from './GuiTR';
 // import GuiBackground from 'gui/GuiBackground';
 // import GuiCamera from 'gui/GuiCamera';
 // import GuiConfig from 'gui/GuiConfig';
-// import GuiFiles from 'gui/GuiFiles';
+import GuiFiles from './GuiFiles';
 import GuiMesh from './GuiMesh';
 // import GuiTopology from 'gui/GuiTopology';
-import GuiRendering from './GuiRendering';
-import GuiScene from './GuiScene';
-// import GuiSculpting from 'gui/GuiSculpting';
+//import GuiRendering from './GuiRendering';
+//import GuiScene from './GuiScene';
+//import GuiSculpting from 'gui/GuiSculpting';
 // import GuiStates from 'gui/GuiStates';
 // import GuiTablet from 'gui/GuiTablet';
 import ShaderContour from '../render/shaders/ShaderContour';
@@ -55,9 +55,9 @@ class Gui {
 
     // Initialize the topbar
     this._topbar = this._guiMain.addTopbar();
-    // ctrls[idc++] = this._ctrlFiles = new GuiFiles(this._topbar, this);
+    ctrls[idc++] = this._ctrlFiles = new GuiFiles(this._topbar, this);
     // // this.initPrint(this._topbar);
-    ctrls[idc++] = this._ctrlScene = new GuiScene(this._topbar, this);
+    // ctrls[idc++] = this._ctrlScene = new GuiScene(this._topbar, this);
     // ctrls[idc++] = this._ctrlStates = new GuiStates(this._topbar, this);
     // ctrls[idc++] = this._ctrlBackground = new GuiBackground(this._topbar, this);
     // ctrls[idc++] = this._ctrlCamera = new GuiCamera(this._topbar, this);
@@ -67,21 +67,21 @@ class Gui {
     ctrls[idc++] = this._ctrlMesh = new GuiMesh(this._topbar, this);
 
     // Initialize the sidebar
-    this._sidebar = this._guiMain.addRightSidebar();
-    ctrls[idc++] = this._ctrlRendering = new GuiRendering(this._sidebar, this);
+    // this._sidebar = this._guiMain.addRightSidebar();
+    // ctrls[idc++] = this._ctrlRendering = new GuiRendering(this._sidebar, this);
     // ctrls[idc++] = this._ctrlTopology = new GuiTopology(this._sidebar, this);
     // ctrls[idc++] = this._ctrlSculpting = new GuiSculpting(this._sidebar, this);
 
     // gui extra
-    var extra = this._topbar.addExtra();
-    // Extra : Настройка интерфейса
-    extra.addTitle(TR('contour'));
-    extra.addColor(TR('contourColor'), ShaderContour.color, this.onContourColor.bind(this));
+    // var extra = this._topbar.addExtra();
+    // // Extra : Настройка интерфейса
+    // extra.addTitle(TR('contour'));
+    // extra.addColor(TR('contourColor'), ShaderContour.color, this.onContourColor.bind(this));
 
-    extra.addTitle(TR('resolution'));
-    extra.addSlider('', this._main._pixelRatio, this.onPixelRatio.bind(this), 0.5, 2.0, 0.02);
+    // extra.addTitle(TR('resolution'));
+    // extra.addSlider('', this._main._pixelRatio, this.onPixelRatio.bind(this), 0.5, 2.0, 0.02);
 
-    this.addAboutButton();
+    //this.addAboutButton();
 
     this.updateMesh();
     this.setVisibility(true);
@@ -173,10 +173,10 @@ class Gui {
   }
 
   updateMesh() {
-    this._ctrlRendering.updateMesh();
+    //this._ctrlRendering.updateMesh();
     // this._ctrlTopology.updateMesh();
     // this._ctrlSculpting.updateMesh();
-    this._ctrlScene.updateMesh();
+    // this._ctrlScene.updateMesh();
     this.updateMeshInfo();
   }
 
@@ -197,7 +197,7 @@ class Gui {
   }
 
   addAlphaOptions(opts) {
-    this._ctrlSculpting.addAlphaOptions(opts);
+    //this._ctrlSculpting.addAlphaOptions(opts);
   }
 
   deleteGui() {

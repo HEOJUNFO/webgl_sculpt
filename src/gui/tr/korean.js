@@ -25,7 +25,7 @@ var TR = {
   // file
   fileTitle: '파일 (가져오기/내보내기)',
   fileImportTitle: '가져오기',
-  fileAdd: '추가 (obj, sgl, ply, stl)',
+  fileAdd: '추가 (stl)',
   fileAutoMatrix: '크기조정 및 중앙정렬',
   fileVertexSRGB: 'sRGB 버텍스 색상',
   fileExportSceneTitle: '장면 내보내기',
