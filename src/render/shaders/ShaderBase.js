@@ -2,8 +2,7 @@ import { vec3 } from 'gl-matrix';
 import getOptionsURL from '../../misc/getOptionsURL';
 import Utils from '../../misc/Utils';
 import Attribute from '../Attribute';
-import colorSpaceGLSL from './glsl/colorSpace.glsl';
-import curvatureGLSL from './glsl/curvature.glsl';
+import {colorSpaceGLSL, curvatureGLSL} from './glsl/shader';
 
 var ShaderBase = {};
 ShaderBase.vertexName = 'VertexName';

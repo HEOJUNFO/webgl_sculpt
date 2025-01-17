@@ -1,12 +1,12 @@
 //SculptGL.js
 import './misc/Polyfill';
 import { vec3 } from 'gl-matrix';
-import { extend, Manager as HammerManager, Pan, Pinch, Tap } from 'hammerjs';
+import { Manager as HammerManager, Pan, Pinch, Tap } from 'hammerjs';
 import Tablet from './misc/Tablet';
 import Enums from './misc/Enums';
 import Utils from './misc/Utils';
 import Scene from './Scene';
-//import Multimesh from 'mesh/multiresolution/Multimesh';
+import Multimesh from './mesh/multiresolution/Multimesh';
 
 var MOUSE_LEFT = 1;
 var MOUSE_MIDDLE = 2;
@@ -375,7 +375,7 @@ class SculptGL extends Scene{
   ////////////////
   onDeviceUp() {
     this.setCanvasCursor('default');
-    //Multimesh.RENDER_HINT = Multimesh.NONE;
+    Multimesh.RENDER_HINT = Multimesh.NONE;
     this._sculptManager.end();
 
     if (this._action === Enums.Action.MASK_EDIT && this._mesh) {
@@ -398,7 +398,7 @@ class SculptGL extends Scene{
       this._camera.start(this._mouseX, this._mouseY);
     }
     this._camera.zoom(dir * 0.02);
-    //Multimesh.RENDER_HINT = Multimesh.CAMERA;
+    Multimesh.RENDER_HINT = Multimesh.CAMERA;
     this.render();
     // workaround for "end mouse wheel" event
     if (this._timerEndWheel)
@@ -407,7 +407,7 @@ class SculptGL extends Scene{
   }
 
   _endWheel() {
-    //Multimesh.RENDER_HINT = Multimesh.NONE;
+    Multimesh.RENDER_HINT = Multimesh.NONE;
     this._isWheelingIn = false;
     this.render();
   }
@@ -472,30 +472,30 @@ class SculptGL extends Scene{
 
     if (action === Enums.Action.CAMERA_ZOOM || (action === Enums.Action.CAMERA_PAN_ZOOM_ALT && !event.altKey)) {
 
-      //Multimesh.RENDER_HINT = Multimesh.CAMERA;
+      Multimesh.RENDER_HINT = Multimesh.CAMERA;
       this._camera.zoom((mouseX - this._lastMouseX + mouseY - this._lastMouseY) * speedFactor);
       this.render();
 
     } else if (action === Enums.Action.CAMERA_PAN_ZOOM_ALT || action === Enums.Action.CAMERA_PAN) {
 
-      //Multimesh.RENDER_HINT = Multimesh.CAMERA;
+      Multimesh.RENDER_HINT = Multimesh.CAMERA;
       this._camera.translate((mouseX - this._lastMouseX) * speedFactor, (mouseY - this._lastMouseY) * speedFactor);
       this.render();
 
     } else if (action === Enums.Action.CAMERA_ROTATE) {
 
-      //Multimesh.RENDER_HINT = Multimesh.CAMERA;
+      Multimesh.RENDER_HINT = Multimesh.CAMERA;
       if (!event.shiftKey)
         this._camera.rotate(mouseX, mouseY);
       this.render();
 
     } else {
 
-      //Multimesh.RENDER_HINT = Multimesh.PICKING;
+      Multimesh.RENDER_HINT = Multimesh.PICKING;
       this._sculptManager.preUpdate();
 
       if (action === Enums.Action.SCULPT_EDIT) {
-        //Multimesh.RENDER_HINT = Multimesh.SCULPT;
+        Multimesh.RENDER_HINT = Multimesh.SCULPT;
         this._sculptManager.update(this);
         if (this.getMesh().isDynamic)
           this._gui.updateMeshInfo();
