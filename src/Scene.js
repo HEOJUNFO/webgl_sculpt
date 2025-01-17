@@ -1,22 +1,23 @@
+//Scene.js
 import { vec3, mat4 } from 'gl-matrix';
 import getOptionsURL from './misc/getOptionsURL';
 import Enums from './misc/Enums';
 import Utils from './misc/Utils';
-// import SculptManager from 'editing/SculptManager';
+import SculptManager from './editing/SculptManager';
 import Subdivision from './editing/Subdivision';
 // import Import from 'files/Import';
 import Gui from './gui/Gui';
-// import Camera from 'math3d/Camera';
-// import Picking from 'math3d/Picking';
+import Camera from './math3d/Camera';
+import Picking from './math3d/Picking';
 // import Background from 'drawables/Background';
 import Mesh from './mesh/Mesh';
 import Multimesh from './mesh/multiresolution/Multimesh';
 import Primitives from './drawables/Primitives';
-// import StateManager from 'states/StateManager';
+import StateManager from './states/StateManager';
 import RenderData from './mesh/RenderData';
 // import Rtt from 'drawables/Rtt';
 import ShaderLib from './render/ShaderLib';
-// import MeshStatic from 'mesh/meshStatic/MeshStatic';
+import MeshStatic from './mesh/meshStatic/MeshStatic';
 import WebGLCaps from './render/WebGLCaps';
 
 class Scene {
@@ -36,11 +37,11 @@ class Scene {
     this._canvasOffsetTop = 0;
 
     // core of the app
-    // this._stateManager = new StateManager(this); // for undo-redo
+    this._stateManager = new StateManager(this); // for undo-redo
     this._sculptManager = null;
-    // this._camera = new Camera(this);
-    // this._picking = new Picking(this);       // the ray picking
-    // this._pickingSym = new Picking(this, true); // the symmetrical picking
+    this._camera = new Camera(this);
+    this._picking = new Picking(this);       // the ray picking
+    this._pickingSym = new Picking(this, true); // the symmetrical picking
 
     // TODO primitive builder
     this._meshPreview = null;
@@ -79,7 +80,7 @@ class Scene {
     this.initWebGL();
     if (!this._gl) return;
 
-    // this._sculptManager = new SculptManager(this);
+    this._sculptManager = new SculptManager(this);
     // this._background = new Background(this._gl, this);
 
     // this._rttContour = new Rtt(this._gl, Enums.Shader.CONTOUR, null);
@@ -140,9 +141,9 @@ class Scene {
     return this._canvasHeight;
   }
 
-  // getCamera() {
-  //   return this._camera;
-  // }
+  getCamera() {
+    return this._camera;
+  }
 
   getGui() {
     return this._gui;
@@ -160,21 +161,21 @@ class Scene {
     return this._selectMeshes;
   }
 
-  // getPicking() {
-  //   return this._picking;
-  // }
+  getPicking() {
+    return this._picking;
+  }
 
-  // getPickingSymmetry() {
-  //   return this._pickingSym;
-  // }
+  getPickingSymmetry() {
+    return this._pickingSym;
+  }
 
   getSculptManager() {
     return this._sculptManager;
   }
 
-  // getStateManager() {
-  //   return this._stateManager;
-  // }
+  getStateManager() {
+    return this._stateManager;
+  }
 
   setMesh(mesh) {
     return this.setOrUnsetMesh(mesh);
@@ -258,7 +259,7 @@ class Scene {
 
     // gl.enable(gl.DEPTH_TEST);
 
-    // if (this._sculptManager) this._sculptManager.postRender(); // draw sculpting gizmo stuffs (if needed)
+    if (this._sculptManager) this._sculptManager.postRender(); // draw sculpting gizmo stuffs (if needed)
   }
 
   _drawScene() {
@@ -341,20 +342,19 @@ class Scene {
   /** Pre compute matrices and sort meshes */
   updateMatricesAndSort() {
     const meshes = this._meshes;
-    // const cam = this._camera;
-    // if (meshes.length > 0 && cam) {
-    //   cam.optimizeNearFar(this.computeBoundingBoxScene());
-    // }
+    const cam = this._camera;
+    if (meshes.length > 0 && cam) {
+      cam.optimizeNearFar(this.computeBoundingBoxScene());
+    }
 
     for (let i = 0, nb = meshes.length; i < nb; ++i) {
-      // if (cam) meshes[i].updateMatrices(cam);
-      meshes[i].updateMatrices(null); // 임시로 null 전달하거나 직접 구현 필요
+      if (cam) meshes[i].updateMatrices(cam);
     }
 
     meshes.sort(Mesh.sortFunction);
 
-    // if (this._meshPreview && cam) this._meshPreview.updateMatrices(cam);
-    // if (this._grid && cam) this._grid.updateMatrices(cam);
+    if (this._meshPreview && cam) this._meshPreview.updateMatrices(cam);
+    if (this._grid && cam) this._grid.updateMatrices(cam);
   }
 
   initWebGL() {
@@ -416,13 +416,13 @@ class Scene {
   }
 
   initAlphaTextures() {
-    // const alphas = Picking.INIT_ALPHAS_PATHS;
-    // const names = Picking.INIT_ALPHAS_NAMES;
-    // for (let i = 0, nbA = alphas.length; i < nbA; ++i) {
-    //   const am = new Image();
-    //   am.src = 'resources/alpha/' + alphas[i];
-    //   am.onload = this.onLoadAlphaImage.bind(this, am, names[i]);
-    // }
+    const alphas = Picking.INIT_ALPHAS_PATHS;
+    const names = Picking.INIT_ALPHAS_NAMES;
+    for (let i = 0, nbA = alphas.length; i < nbA; ++i) {
+      const am = new Image();
+      am.src = 'resources/alpha/' + alphas[i];
+      am.onload = this.onLoadAlphaImage.bind(this, am, names[i]);
+    }
   }
 
   /** Called when the window is resized */
@@ -440,7 +440,7 @@ class Scene {
     this._canvas.height = newHeight;
 
     this._gl.viewport(0, 0, newWidth, newHeight);
-    // if (this._camera) this._camera.onResize(newWidth, newHeight);
+    if (this._camera) this._camera.onResize(newWidth, newHeight);
     // if (this._background) this._background.onResize(newWidth, newHeight);
 
     // if (this._rttContour) this._rttContour.onResize(newWidth, newHeight);
@@ -475,8 +475,8 @@ class Scene {
 
   computeBoundingBoxScene() {
     const scene = this._meshes.slice();
-    // if (this._grid) scene.push(this._grid);
-    // if (this._sculptManager) this._sculptManager.addSculptToScene(scene);
+    if (this._grid) scene.push(this._grid);
+    if (this._sculptManager) this._sculptManager.addSculptToScene(scene);
     return this.computeBoundingBoxMeshes(scene);
   }
 
@@ -560,7 +560,7 @@ class Scene {
 
   addNewMesh(mesh) {
     this._meshes.push(mesh);
-    // this._stateManager.pushStateAdd(mesh);
+    this._stateManager.pushStateAdd(mesh);
     this.setMesh(mesh);
     return mesh;
   }
@@ -612,9 +612,9 @@ class Scene {
   }
 
   clearScene() {
-    // if (this.getStateManager()) this.getStateManager().reset();
+    if (this.getStateManager()) this.getStateManager().reset();
     this.getMeshes().length = 0;
-    // if (this.getCamera()) this.getCamera().resetView();
+    if (this.getCamera()) this.getCamera().resetView();
     this.setMesh(null);
     this._action = Enums.Action.NOTHING;
   }
@@ -623,7 +623,7 @@ class Scene {
     if (!this._mesh) return;
 
     this.removeMeshes(this._selectMeshes);
-    // this._stateManager.pushStateRemove(this._selectMeshes.slice());
+    this._stateManager.pushStateRemove(this._selectMeshes.slice());
     this._selectMeshes.length = 0;
     this.setMesh(null);
   }
@@ -658,14 +658,14 @@ class Scene {
 
   duplicateSelection() {
     const meshes = this._selectMeshes.slice();
-    // let mesh = null;
-    // for (let i = 0; i < meshes.length; ++i) {
-    //   mesh = meshes[i];
-    //   const copy = new MeshStatic(mesh.getGL());
-    //   copy.copyData(mesh);
-    //   this.addNewMesh(copy);
-    // }
-    // this.setMesh(mesh);
+    let mesh = null;
+    for (let i = 0; i < meshes.length; ++i) {
+      mesh = meshes[i];
+      const copy = new MeshStatic(mesh.getGL());
+      copy.copyData(mesh);
+      this.addNewMesh(copy);
+    }
+    this.setMesh(mesh);
   }
 
   
@@ -692,14 +692,14 @@ class Scene {
   
 
   resetCameraMeshes(meshes) {
-    // if (!this._camera) return;
+    if (!this._camera) return;
     if (!meshes) meshes = this._meshes;
 
     if (meshes.length > 0) {
       const pivot = [0.0, 0.0, 0.0];
       const box = this.computeBoundingBoxMeshes(meshes);
       let zoom = 0.8 * this.computeRadiusFromBoundingBox(box);
-      // zoom *= this._camera.computeFrustumFit();
+      zoom *= this._camera.computeFrustumFit();
 
       vec3.set(
         pivot,
@@ -707,9 +707,9 @@ class Scene {
         (box[1] + box[4]) * 0.5,
         (box[2] + box[5]) * 0.5
       );
-      // this._camera.setAndFocusOnPivot(pivot, zoom);
+      this._camera.setAndFocusOnPivot(pivot, zoom);
     } else {
-      // this._camera.resetView();
+      this._camera.resetView();
     }
     this.render();
   }

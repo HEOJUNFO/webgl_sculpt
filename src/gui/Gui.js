@@ -4,7 +4,7 @@ import TR from './GuiTR';
 // import GuiCamera from 'gui/GuiCamera';
 // import GuiConfig from 'gui/GuiConfig';
 // import GuiFiles from 'gui/GuiFiles';
-// import GuiMesh from 'gui/GuiMesh';
+import GuiMesh from './GuiMesh';
 // import GuiTopology from 'gui/GuiTopology';
 // import GuiRendering from 'gui/GuiRendering';
 // import GuiScene from 'gui/GuiScene';
@@ -64,7 +64,7 @@ class Gui {
     // // TODO find a way to get pressure event
     // ctrls[idc++] = this._ctrlTablet = new GuiTablet(this._topbar, this);
     // ctrls[idc++] = this._ctrlConfig = new GuiConfig(this._topbar, this);
-    // ctrls[idc++] = this._ctrlMesh = new GuiMesh(this._topbar, this);
+    ctrls[idc++] = this._ctrlMesh = new GuiMesh(this._topbar, this);
 
     // Initialize the sidebar
     this._sidebar = this._guiMain.addRightSidebar();
@@ -173,10 +173,10 @@ class Gui {
   }
 
   updateMesh() {
-    this._ctrlRendering.updateMesh();
-    this._ctrlTopology.updateMesh();
-    this._ctrlSculpting.updateMesh();
-    this._ctrlScene.updateMesh();
+    // this._ctrlRendering.updateMesh();
+    // this._ctrlTopology.updateMesh();
+    // this._ctrlSculpting.updateMesh();
+    // this._ctrlScene.updateMesh();
     this.updateMeshInfo();
   }
 

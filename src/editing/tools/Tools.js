@@ -1,9 +1,9 @@
 import Enums from '../../misc/Enums';
-// import Brush from 'editing/tools/Brush';
+import Brush from './Brush';
 // import Inflate from 'editing/tools/Inflate';
 // import Twist from 'editing/tools/Twist';
-import Smooth from 'editing/tools/Smooth';
-// import Flatten from 'editing/tools/Flatten';
+import Smooth from './Smooth';
+import Flatten from './Flatten';
 // import Pinch from 'editing/tools/Pinch';
 // import Crease from 'editing/tools/Crease';
 // import Drag from 'editing/tools/Drag';
@@ -15,11 +15,11 @@ import Smooth from 'editing/tools/Smooth';
 
 var Tools = [];
 
-// Tools[Enums.Tools.BRUSH] = Brush;
+Tools[Enums.Tools.BRUSH] = Brush;
 // Tools[Enums.Tools.INFLATE] = Inflate;
 // Tools[Enums.Tools.TWIST] = Twist;
 Tools[Enums.Tools.SMOOTH] = Smooth;
-// Tools[Enums.Tools.FLATTEN] = Flatten;
+Tools[Enums.Tools.FLATTEN] = Flatten;
 // Tools[Enums.Tools.PINCH] = Pinch;
 // Tools[Enums.Tools.CREASE] = Crease;
 // Tools[Enums.Tools.DRAG] = Drag;
@@ -29,11 +29,11 @@ Tools[Enums.Tools.SMOOTH] = Smooth;
 // Tools[Enums.Tools.LOCALSCALE] = LocalScale;
 // Tools[Enums.Tools.TRANSFORM] = Transform;
 
-// Tools[Enums.Tools.BRUSH].uiName = 'sculptBrush';
+Tools[Enums.Tools.BRUSH].uiName = 'sculptBrush';
 // Tools[Enums.Tools.INFLATE].uiName = 'sculptInflate';
 // Tools[Enums.Tools.TWIST].uiName = 'sculptTwist';
 Tools[Enums.Tools.SMOOTH].uiName = 'sculptSmooth';
-// Tools[Enums.Tools.FLATTEN].uiName = 'sculptFlatten';
+Tools[Enums.Tools.FLATTEN].uiName = 'sculptFlatten';
 // Tools[Enums.Tools.PINCH].uiName = 'sculptPinch';
 // Tools[Enums.Tools.CREASE].uiName = 'sculptCrease';
 // Tools[Enums.Tools.DRAG].uiName = 'sculptDrag';

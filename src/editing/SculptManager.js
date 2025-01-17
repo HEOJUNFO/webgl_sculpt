@@ -1,6 +1,6 @@
-// import Selection from 'drawables/Selection';
+import Selection from '../drawables/Selection';
 import Tools from './tools/Tools';
-import Enums from 'misc/Enums';
+import Enums from '../misc/Enums';
 
 class SculptManager {
 
@@ -11,13 +11,13 @@ class SculptManager {
     this._tools = []; // the sculpting tools
 
     // symmetry stuffs
-    this._symmetry = true; // if symmetric sculpting is enabled  
+    this._symmetry = false; // if symmetric sculpting is enabled  
 
     // continuous stuffs
     this._continuous = false; // continuous sculpting
     this._sculptTimer = -1; // continuous interval timer
 
-    //this._selection = new Selection(main._gl); // the selection geometry (red hover circle)
+    this._selection = new Selection(main._gl); // the selection geometry (red hover circle)
 
     this.init();
   }

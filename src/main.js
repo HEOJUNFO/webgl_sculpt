@@ -8,6 +8,8 @@ function main() {
   // SculptGL 인스턴스 생성
   const sculptGL = new SculptGL();
 
+  sculptGL.start();
+
   // 사용자가 직접 이벤트를 활성화하도록 설계되어 있으므로 addEvents() 호출
   // (SculptGL 내부에서 이벤트를 등록해도 되지만, 예제상 명시적으로 호출)
   sculptGL.addEvents();

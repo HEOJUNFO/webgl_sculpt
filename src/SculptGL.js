@@ -13,7 +13,7 @@ var MOUSE_MIDDLE = 2;
 var MOUSE_RIGHT = 3;
 
 // Manage events
-class SculptGL extends Scene{
+class SculptGL extends Scene {
 
   constructor() {
     super();
@@ -40,7 +40,7 @@ class SculptGL extends Scene{
     this._eventProxy = {};
 
     this.initHammer();
-    //this.addEvents();
+    this.addEvents();
   }
 
   addEvents() {
@@ -63,8 +63,8 @@ class SculptGL extends Scene{
     canvas.addEventListener('DOMMouseScroll', cbMouseWheel, false);
 
     //key
-    //window.addEventListener('keydown', this.onKeyDown.bind(this), false);
-    //window.addEventListener('keyup', this.onKeyUp.bind(this), false);
+    window.addEventListener('keydown', this.onKeyDown.bind(this), false);
+    window.addEventListener('keyup', this.onKeyUp.bind(this), false);
 
     var cbLoadFiles = this.loadFiles.bind(this);
     var cbStopAndPrevent = this.stopAndPrevent.bind(this);
@@ -155,13 +155,13 @@ class SculptGL extends Scene{
   ////////////////
   // KEY EVENTS
   ////////////////
-//   onKeyDown(e) {
-//     this._gui.callFunc('onKeyDown', e);
-//   }
+  onKeyDown(e) {
+    this._gui.callFunc('onKeyDown', e);
+  }
 
-//   onKeyUp(e) {
-//     this._gui.callFunc('onKeyUp', e);
-//   }
+  onKeyUp(e) {
+    this._gui.callFunc('onKeyUp', e);
+  }
 
   ////////////////
   // MOBILE EVENTS
@@ -492,7 +492,7 @@ class SculptGL extends Scene{
     } else {
 
       Multimesh.RENDER_HINT = Multimesh.PICKING;
-      //this._sculptManager.preUpdate();
+      this._sculptManager.preUpdate();
 
       if (action === Enums.Action.SCULPT_EDIT) {
         Multimesh.RENDER_HINT = Multimesh.SCULPT;
